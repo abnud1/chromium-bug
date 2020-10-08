@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script type="module">
+      import { Workbox } from "/workbox-window.mjs";
+
+      if ("serviceWorker" in navigator) {
+        const wb = new Workbox("/sw.js");
+
+        wb.register();
+      }
+    </script>
+  </head>
+  <body>
+    <form id="form">
+      <label for="name">Name:</label>
+      <input name="name" id="name" />
+      <br />
+      <label for="profile-image">Profile Image:</label>
+      <input type="file" name="profile-image" id="profile-image" />
+      <br />
+      <button type="submit">Submit</button>
+    </form>
+    <script>
+      document.getElementById("form").addEventListener("submit", (ev) => {
+        ev.preventDefault();
+        const formData = new FormData();
+        const file = document.getElementById("profile-image").files[0];
+        formData.set("profile-image", file, "img.png");
+        formData.set("name", document.getElementById("name").value);
+        fetch("/test", {
+          method: "POST",
+          body: formData,
+        });
+      });
+    </script>
+  </body>
+</html>
